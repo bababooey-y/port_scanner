@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scanner de port(s)</title>
+    </head>
+
+    <body>
+        <h1>Port scanner</h1>
+        <form action="/" method="post">
+            {{form.hidden_tag()}}
+            {{form.adresse_ip.label}}
+            {{form.adresse_ip()}}
+            {{form.port.label}}
+            {{form.port()}}
+            {{form.submit()}}
+        </form>
+    </body>
+</html>

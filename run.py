@@ -1,0 +1,53 @@
+from flask import Flask, render_template, redirect, url_for, session
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+from scan import scan
+import ipaddress
+
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "clef"
+
+
+class Form(FlaskForm):
+    adresse_ip = StringField("Adresse IP: ", validators=[DataRequired()])
+    port = StringField("Port(s): ", validators=[DataRequired()])
+    submit = SubmitField("Envoyer")
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    formulaire = Form()
+
+    if formulaire.validate_on_submit():
+        if 1<= int(formulaire.port.data) <= 65535 and ipaddress.ip_address(formulaire.adresse_ip.data):
+            session["adresse_ip"] = formulaire.adresse_ip.data
+            session["port"] = formulaire.port.data
+
+            return redirect(url_for("scan_form"))
+    return render_template("template.html", form = formulaire)
+
+
+@app.route("/scan")
+def scan_form():
+    ip_adresse = session.get("adresse_ip")
+    ports = session.get('port')
+    return render_template('scan.html', adresse_ip = ip_adresse, port = ports)
+
+@app.route("/result")
+def result():
+    adresse_ip = session.get("adresse_ip")
+    port = session.get('port')
+    resultat = scan(adresse_ip, int(port))
+
+    return render_template('result.html', result = resultat, ip = adresse_ip, p = port)
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
