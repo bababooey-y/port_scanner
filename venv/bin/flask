@@ -1,4 +1,4 @@
-#!/home/bababooey/Documents/port_scanner/venv/bin/python3
+#!/home/bababooey/Development/port_scanner/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
