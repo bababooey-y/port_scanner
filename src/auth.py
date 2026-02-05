@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for, render_template, Blueprint
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from src.services.users import create_user, get_user, user_exists
+from src.services.user import create_user, get_user, user_exists
 
 auth_blueprint = Blueprint("auth", __name__)
 
