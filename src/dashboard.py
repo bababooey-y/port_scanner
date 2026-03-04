@@ -4,9 +4,10 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from src.core.scan import scan
 import ipaddress
+from src.services.sessions import login_required
 
 
-forms_blueprint = Blueprint("forms", __name__)
+dashboard_blueprint = Blueprint("dashboard", __name__)
 
 #app = Flask(__name__)
 #app.config["SECRET_KEY"] = "clef"
@@ -17,7 +18,8 @@ class Form(FlaskForm):
     port = StringField("Port(s): ", validators=[DataRequired()])
     submit = SubmitField("Envoyer")
 
-@forms_blueprint.route("/", methods=["GET", "POST"])
+@dashboard_blueprint.route("/dashboard", methods=["GET", "POST"])
+@login_required
 def index():
     formulaire = Form()
 
@@ -30,13 +32,14 @@ def index():
     return render_template("template.html", form = formulaire)
 
 
-@forms_blueprint.route("/scan")
+@dashboard_blueprint.route("/scan")
+@login_required
 def scan_form():
     ip_adresse = session.get("adresse_ip")
     ports = session.get('port')
     return render_template('scan.html', adresse_ip = ip_adresse, port = ports)
 
-@forms_blueprint.route("/result")
+@dashboard_blueprint.route("/result")
 def result():
     adresse_ip = session.get("adresse_ip")
     port = session.get('port')
